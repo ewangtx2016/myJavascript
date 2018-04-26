@@ -22,6 +22,7 @@
         getTimeText: function(id, obj){
             this.id = id;
             this.obj = obj;
+            this.tim = 0;
             if(!obj.splitTime){
                 this.setTime()
             }else{
@@ -39,13 +40,14 @@
             // 计算d\h\m\s 的和
             let he = 0;
             let _this = this;
+            let title = this.obj.title ? `<strong>${this.obj.title}</strong>` : '';
             for(let one of this.timeAr){
                 he += parseInt(one);
             }
             if(this.obj.timeType == 0){
                 let dayTxt = this.timeAr[0] > 0 ? `<span>${this.timeAr[0]}</span><em>天</em>` : '';
                 txt =  `
-                    <strong>${this.obj.title}</strong>
+                    ${title}
                     ${dayTxt}
                     <span>${this.timeAr[1]}</span><em>时</em>
                     <span>${this.timeAr[2]}</span><em>分</em>
@@ -54,13 +56,14 @@
               }else{
                 let dayTxt = this.timeAr[0] > 0 ? `<span>${this.timeAr[0]}</span><em>:</em>` : '';
                 txt =  `
-                    <strong>${this.obj.title}</strong>
+                    ${title}
                     ${dayTxt}
                     <span>${this.timeAr[1]}</span><em>:</em>
                     <span>${this.timeAr[2]}</span><em>:</em>
                     <span>${this.timeAr[3]}</span>                
                 `;
               }
+              console.log(this.timeAr)
              
               
 
@@ -68,7 +71,7 @@
                 // 添加dom
                 document.querySelector('#'+this.id).innerHTML = '活动已结束';
                 //回调函数
-                this.obj.timeCall()
+                this.obj.timeCall && this.obj.timeCall();
                 return false;
             }
 
@@ -92,7 +95,7 @@
                 return false;
             }
             
-            let time = timeNubNow - 1000;
+            let time = timeNubNow;
             let day = ((time/(24*60*60*1000)) | 0) < 0 ? 0 : (time/(24*60*60*1000)) | 0;
                 day = day < 10 ? '0' + day : day;
             let hoursLeve = time%(24*60*60*1000);
@@ -102,17 +105,18 @@
             let minute = ((minuteLeve/(60*1000)) | 0) < 0 ? 0 : (minuteLeve/(60*1000)) | 0;
                 minute = minute < 10 ? '0' + minute : minute
             let secLeve = time%(60*1000);
-            let sec = ((secLeve/1000) | 0) < 0 ? 0 : (secLeve/1000) | 0;
+            //这里非常重要，计算剩余的秒数的时候要用round()不能用向上取舍或者向下取舍，会有问题
+            let sec = Math.round((secLeve/1000)) < 0 ? 0 : Math.round((secLeve/1000));
                 sec = sec < 10 ? '0' + sec : sec
             let NYR = [day, hours, minute, sec];
-            
+                time = timeNubNow - 1000;
             return NYR;
         },
         //获取时间差
         timeCha: function(){
-           let start = this.gengTime(this.obj.startTime);
-           let end = this.gengTime(this.obj.endTime);  
            let now = this.gengTime(new Date());
+           let start = this.obj.startTime ? this.gengTime(this.obj.startTime) : now;
+           let end = this.obj.endTime ? this.gengTime(this.obj.endTime) : now;  
            let timeObj = null;
            if((start - now) > 0){
                 timeObj = {
