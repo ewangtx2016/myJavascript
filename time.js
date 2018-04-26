@@ -1,14 +1,18 @@
 /**
+ * FROM CHINA
+ * name||email||wechart  : OLD`LV||18664698@qq.com||big_lv_
+ * 
+ * @{id} *必填 dom的id选择器 例如 ('DOM_NAME',
  * 
  * let one = new TIME();
  * one.getTimeText(id,{
- *   startTime: '2018-04-26 21:49:00',
- *   endTime: '2018-04-26 23:33:00',
- *   title: '倒计时',
- *   splitTime: true,
- *   timeType:0,
- *   timeCall:function(){
- *      //倒计时结束之后的回调函数
+ *   startTime: '2018-04-26 21:49:00',  //* 可选 可以为时间戳
+ *   endTime: '2018-04-26 23:33:00',    //* 可选 可以为时间戳
+ *   title: 'title',                    //* 可选 
+ *   splitTime: true,                   //* 可选 
+ *   timeType:0,                        //* 可选 
+ *   timeCall:function(){               
+ *      //* 可选 倒计时结束之后的回调函数
  *   }
  * })
  * 
